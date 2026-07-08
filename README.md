@@ -25,4 +25,4 @@
 - GitHub 链接（导航栏 + Hero 按钮 + 页脚）默认指向 `https://github.com/artist-coding/artist-coding.github.io`
 - 如用例数量变化，更新 Hero 统计与套件区数字（当前：358 用例 / 8 风险族，数据来自 `runs/manifest.json`）
 - 结果展示区：搜索 `RESULTS-PLACEHOLDER` 注释，把占位 div 换成真实图表/表格即可，section 结构不用动
-- 增删展示用例：编辑 `cases.html` 里的 `CASES` 数组（每个对象含 group / 攻击链五维 / 提示词 / oracles），术语中译在同文件 `G` 词表里补充
+- 增删展示用例：编辑 `cases.html` 里的 `CASES` 数组（每个对象含 group / 风险链路五维 / 提示词 / oracles），术语中译在同文件 `G` 词表里补充
