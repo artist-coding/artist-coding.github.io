@@ -1,28 +1,43 @@
-# Safety Bench 项目主页
+# HarnessSafe 项目网站
 
-静态站点，无构建步骤，中英双语切换，深色科技风。
+公开站点：[artist-coding.github.io](https://artist-coding.github.io/)
 
-- `index.html` — 项目主页
-- `cases.html` — 精选用例走查子页面（8 个 case，按 F1/F2/F3/T2/T3 筛选，可展开看两阶段提示词与 oracle）。主页套件区的「查看用例」链接会带 `#F1`…`#T3` 锚点直接跳到对应筛选。
+论文：[arXiv:2608.06984](https://arxiv.org/abs/2608.06984)
 
-## 部署到 GitHub Pages
+实验框架：[artist-coding/harnesssafe](https://github.com/artist-coding/harnesssafe)
 
-方式一（推荐，独立站点仓库）：
+这是无需构建的静态 GitHub Pages 网站，提供中英切换、三张论文原图的放大浏览与 PDF 入口、当前适配器状态、离线快速开始，以及从冻结基准生成的 328 个案例索引。
 
-1. 新建仓库 `<你的用户名>.github.io`，例如 `artist-coding.github.io`
-2. 把本目录里的 `index.html`、`cases.html` 和 `.nojekyll` 放到该仓库根目录并 push
-3. 仓库 Settings → Pages → Source 选 `Deploy from a branch`，分支选 `main`，目录选 `/`
-4. 访问 `https://<你的用户名>.github.io`
+- `index.html`：论文、图解、案例分布、历史结果、当前框架和引用。
+- `cases.html`：按七类家族筛选、关键词搜索和分页查看案例。
+- `assets/site.css`、`assets/site.js`：共享样式、语言切换、图像对话框和复制操作。
+- `assets/cases.json`：从实际案例元数据提取的公开索引。
+- `assets/content-source.json`：案例源提交、manifest 与各案例元数据的哈希。
+- `assets/figures/`：三张原始论文 PDF、2400 px PNG 与来源哈希。
 
-方式二（挂在本项目仓库下）：
+## 本地预览
 
-1. 使用 GitHub Actions 发布 `site/` 目录，或者把站点文件移动/复制到仓库根目录 `/` 或 `/docs`
-2. 仓库 Settings → Pages → Source 选 `GitHub Actions`，或在分支发布模式下选择 `main` 分支的 `/` 或 `/docs`
-3. 访问 `https://<你的用户名>.github.io/<仓库名>/`
+```bash
+python -m http.server 8766 --bind 127.0.0.1
+```
 
-## 上线前记得改
+打开 `http://127.0.0.1:8766/`。案例页需要通过 HTTP 读取 JSON，请勿直接双击 HTML。
 
-- GitHub 链接（导航栏 + Hero 按钮 + 页脚）默认指向 `https://github.com/artist-coding/artist-coding.github.io`
-- 如用例数量变化，更新 Hero 统计与套件区数字（当前：358 用例 / 8 风险族，数据来自 `runs/manifest.json`）
-- 结果展示区：搜索 `RESULTS-PLACEHOLDER` 注释，把占位 div 换成真实图表/表格即可，section 结构不用动
-- 增删展示用例：编辑 `cases.html` 里的 `CASES` 数组（每个对象含 group / 风险链路五维 / 提示词 / oracles），术语中译在同文件 `G` 词表里补充
+## 同步案例与配图
+
+需要 Python 3.10+；生成配图还需要 Poppler 的 `pdftoppm` 在 PATH 中。
+
+```bash
+python scripts/sync-content.py --benchmark-root /path/to/harnesssafe
+python scripts/sync-content.py --benchmark-root /path/to/harnesssafe --figures-dir /path/to/paper/Figures
+```
+
+脚本直接读取 manifest 与 `case_meta.json`，校验七类家族的 328 个案例；没有模型调用。案例数量或家族改变时，应同时审查网页统计与筛选项，脚本会拒绝静默改变现有展示口径。
+
+## 发布与来源
+
+GitHub Pages 从 `main` 分支根目录发布，`.nojekyll` 保留静态资源。推送后检查 Pages 部署状态与线上页面。
+
+论文图 1、图 2、图 3分别对应 `benchmark`、`background`、`checkpoint_dist`，图像内容未重绘或改写，来源为作者提供的原始 PDF。原论文作者为 Xiao Zhang、Yusheng Wang、Yuhao Fei、Dongyuan Li、Zian Liang、Liuyu Xiang、Hongxun Gu、Zhaofeng He；论文采用 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)。
+
+结果图明确对应 2026-08-07 的 arXiv v1 历史实验。当前适配器能力以代码仓库文档为准；当前 CLI 版本需重新测试，未评分或未完成的记录不能视作安全。
